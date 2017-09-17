@@ -1,0 +1,123 @@
+<?php
+/**
+ * @var Zend\View\Model\ViewModel $child
+ */
+$children = $this->viewModel()->getCurrent()->getChildren();
+?>
+
+<!-- Nav tabs -->
+<ul class="nav nav-tabs" role="tablist">
+    <?php foreach ($children as $key => $child) : ?>
+        <li role="presentation" class="<?= ($key === 0) ? 'active' : '' ?>">
+            <a href="#<?= $child->captureTo() ?>" aria-controls="<?= $child->captureTo() ?>" role="tab" data-toggle="tab" data-href="<?= $child->getVariable('overwriteUrl') ?>" data-id="<?= $child->getVariable('gridId') ?>">
+                <?= $child->getVariable('title') ?>
+            </a>
+        </li>
+    <?php endforeach; ?>
+</ul>
+
+<div class="tab-content">
+    <?php foreach ($children as $key => $child) : ?>
+        <div role="tabpanel" class="tab-pane <?= ($key === 0) ? 'active' : '' ?>" id="<?= $child->captureTo() ?>">
+            <?php echo $this->{$child->captureTo()} ?>
+        </div>
+    <?php endforeach; ?>
+</div>
+
+<?php /*
+<div id="tabs" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
+    <ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
+        <?php foreach ($children as $child) : ?>
+            <li class="ui-state-default ui-corner-top">
+                <a class="ui-tabs-anchor" href="#<?= $child->captureTo() ?>-content" data-href="<?= $child->getVariable('overwriteUrl') ?>" data-id="<?= $child->getVariable('gridId') ?>">
+                    <?= $child->getVariable('title') ?>
+                </a>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+
+    <?php foreach ($children as $child) : ?>
+        <div id="<?= $child->captureTo() ?>-content" class="ui-tabs-panel">
+            <?php echo $this->{$child->captureTo()} ?>
+        </div>
+    <?php endforeach; ?>
+</div>
+ */ ?>
+
+<script>
+    <?php $this->inlineScript()->captureStart(); ?>
+
+    jQuery(document).ready(function ($) {
+        // general tabs setting
+        // Javascript to enable link to tab
+        var switcher = $('.nav-tabs a');
+        var url = document.location.toString();
+        if (url.match('#')) {
+            $('.nav-tabs a[href="#' + url.split('#')[1] + '"]').tab('show');
+        }
+
+        // Change hash for page-reload
+        /*switcher.on('shown.bs.tab', function (e) {
+            e.stopPropagation();
+            window.location.hash = e.target.hash;
+        });*/
+
+        // Prevent Jump When Tabs Are Clicked
+        // @link http://goo.gl/4PEJ83
+        switcher.click(function (e) {
+            history.pushState(null, null, $(this).attr('href'));
+        });
+
+        // jqGrid only tabs setting
+        /*switcher.on('show.bs.tab', function(e) {
+            //console.log(ui.tab.hash);
+            var newTab = $(e.target);
+            var grid = $('#' + newTab.children('a:first').data('id'));
+            var dataType = grid.jqGrid('getGridParam', 'datatype');
+
+            if (dataType === 'local') {
+                grid.jqGrid('setGridParam', {
+                    datatype: 'json',
+                }).trigger('reloadGrid');
+            }
+        });*/
+
+        // remove title bar
+        $('.tab-content .ui-jqgrid-titlebar').remove();
+
+        //$('table[id$="_grid"]').bind('jqGrid.loadComplete', function() {
+            //DropDown.attachePreviewImage();
+        //});
+
+
+        /*
+        switcher.tabs({
+            activate: function(event, ui) {
+                window.location.hash = ui.newPanel.selector;
+            }
+        });
+
+        // jqGrid only tabs setting
+        switcher.on('tabsbeforeactivate', function(event, ui) {
+            //console.log(ui.tab.hash);
+            var grid = $('#' + ui.newTab.children('a:first').data('id'));
+            var dataType = grid.jqGrid('getGridParam', 'datatype');
+
+            if (dataType === 'local') {
+                grid.jqGrid('setGridParam', {
+                    datatype: 'json',
+                }).trigger('reloadGrid');
+            }
+        });
+
+        // remove title bar
+        $('#tabs .ui-jqgrid-titlebar').remove();
+
+        $('table[id$="_grid"]').bind('jqGrid.loadComplete', function() {
+            DropDown.attachePreviewImage();
+        });
+        */
+    });
+
+    <?php $this->inlineScript()->captureEnd(); ?>
+</script>
