@@ -22,5 +22,11 @@
     "psr-4": {
       "Popov\\ZfcTab\\": "src/"
     }
+  },
+  "extra": {
+    "zf": {
+      "component": "Popov\\ZfcTab",
+      "config-provider": "Popov\\ZfcTab\\ConfigProvider"
+    }
   }
 }
